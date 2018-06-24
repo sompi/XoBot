@@ -1,0 +1,88 @@
+import xobot.script.methods.GameObjects;
+import xobot.client.callback.listeners.MessageListener;
+import xobot.client.callback.listeners.PaintListener;
+import xobot.script.ActiveScript;
+import xobot.script.Manifest;
+import xobot.script.methods.*;
+import xobot.script.methods.input.KeyBoard;
+import xobot.script.util.Time;
+import xobot.script.wrappers.Path;
+import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
+
+import java.awt.*;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    //data Data = new data();
+
+    Tile slayertowerBansheeTile = new Tile(3436, 3557);
+    public Tile[] slayertowerBanseePath = { new Tile(3428, 3551, 0), new Tile(3413, 3558, 0), new Tile(3417, 3573, 0),
+    new Tile(3436, 3573, 0), new Tile(3447, 3564, 0), new Tile(3437, 3559, 0)};
+
+    private int state = -1;
+    public boolean isAtDestination = false;
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                teleportToArea();
+                break;
+            case 2:
+                walkToMonster();
+                break;
+            case 3:
+                //At Banshees
+                break;
+
+            case 0:
+                goHome();
+                break;
+        }
+
+    }
+
+    private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }
+
+    private void walkToMonster() {
+        Path p = new Path(slayertowerBanseePath);
+        while (Calculations.distanceTo(slayertowerBansheeTile) > 3 && !Players.getMyPlayer().isMoving() && Calculations.distanceTo(slayertowerBansheeTile) <= 100) {
+            Tile a = p.getNextTile();
+            Walking.walkTo(a);
+            Time.sleep(3500);
+        }
+
+    }
+
+    private void teleportToArea() {
+        Teleport.teleport("Slayer tower");
+        Time.sleep(2800, 3200);
+
+    }
+
+    private void getState() {
+        if (NPCs.getNearest(Data.teleportWizard) != null) {
+            state = 1;
+            isAtDestination = false;
+        }
+        if (Calculations.distanceTo(slayertowerBansheeTile) <= 60 && Calculations.distanceTo(slayertowerBansheeTile) >= 5) {
+            state = 2;
+            isAtDestination = false;
+        } else if (slayertowerBansheeTile.isReachable()){
+            state = 3;
+            isAtDestination = true;
+        }
+
+        else {
+            state = 0;
+            isAtDestination = false;
+        }
+    }
+}

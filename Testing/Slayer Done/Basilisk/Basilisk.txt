@@ -1,0 +1,127 @@
+import xobot.client.callback.listeners.MessageListener;
+        import xobot.client.callback.listeners.PaintListener;
+        import xobot.script.ActiveScript;
+        import xobot.script.Manifest;
+        import xobot.script.methods.*;
+        import xobot.script.methods.input.KeyBoard;
+import xobot.script.methods.tabs.Skills;
+import xobot.script.util.Time;
+        import xobot.script.wrappers.Path;
+        import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
+
+import java.awt.*;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    //data Data = new data();
+
+    Tile fremmenikDungeonBasiliskTile = new Tile(2744, 10012);
+    Tile fremmenikDungeonAgilityTile = new Tile(2775, 10002);
+    Tile usedAgilityTile = new Tile(2768, 10002, 0);
+    public Tile[] fremmenikDungeonBasiliskPath = { new Tile(2795, 9997, 0),  new Tile(2792, 9998, 0), new Tile(2777, 10005, 0), new Tile(2788, 10018, 0),
+            new Tile(2789, 10034, 0), new Tile(2773, 10031, 0), new Tile(2763, 10020, 0), new Tile(2762, 10002, 0),
+    new Tile(2749, 9994, 0), new Tile(2743, 10008, 0)};
+
+    private int state = -1;
+    public boolean isAtDestination = false;
+    public boolean shortcutUsed = false;
+    public boolean useShortcut = false;
+
+    public void checkAgilityLevel(){
+        if (Skills.getCurrentLevel(Skills.AGILITY) >= 81){
+            useShortcut = true;
+        }
+    }
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                teleportToArea();
+                break;
+            case 2:
+                walkToMonster();
+                break;
+            case 3:
+                agilityShortcut();
+            case 4:
+                //At Basilisks
+                break;
+
+            case 0:
+                goHome();
+                break;
+        }
+
+    }
+
+    private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }
+
+    public void agilityShortcut(){
+
+        GameObject agility = GameObjects.getNearest(16544);
+        if (agility != null && Calculations.distanceTo(agility.getLocation())  < 10){
+            agility.interact("Jump-over");
+            Time.sleep(3000, 4000);
+            Time.sleep(()-> Players.getMyPlayer().getLocation() == usedAgilityTile, 40000);
+            shortcutUsed = true;
+        }
+    }
+
+    private void walkToMonster() {
+        Path p = new Path(fremmenikDungeonBasiliskPath);
+        while (Calculations.distanceTo(fremmenikDungeonBasiliskTile) > 3 && !Players.getMyPlayer().isMoving() && Calculations.distanceTo(fremmenikDungeonBasiliskTile) <= 100) {
+            Tile a = p.getNextTile();
+            Walking.walkTo(a);
+            Time.sleep(3500);
+            if (useShortcut == true && shortcutUsed == false){
+                agilityShortcut();
+            }
+        }
+
+    }
+
+    private void teleportToArea() {
+        Teleport.teleport("Fremennik slayer dungeon");
+        Time.sleep(2800, 3200);
+
+    }
+
+    private void getState() {
+        checkAgilityLevel();
+        if (NPCs.getNearest(Data.teleportWizard) != null) {
+            state = 1;
+            isAtDestination = false;
+        }
+        if (Calculations.distanceTo(fremmenikDungeonBasiliskTile) <= 100 && Calculations.distanceTo(fremmenikDungeonBasiliskTile) >= 5) {
+            state = 2;
+            isAtDestination = false;
+        } else if (Calculations.distanceTo(fremmenikDungeonAgilityTile) <= 6 && useShortcut == true && Players.getMyPlayer().getLocation().getX() > 2770){
+            state = 3;
+            isAtDestination = false;
+        } else if (Calculations.distanceTo(fremmenikDungeonBasiliskTile) <= 7 || fremmenikDungeonBasiliskTile.isReachable()){
+            state = 4;
+            isAtDestination = true;
+        }
+
+        else {
+            state = 0;
+            isAtDestination = false;
+        }
+    }
+}
+
+
+    public void getTile(){
+        int x = Players.getMyPlayer().getLocation().getX();
+        int y = Players.getMyPlayer().getLocation().getY();
+        int z = Players.getMyPlayer().getLocation().getPlane();
+        System.out.println("new Tile(" + x + ", " + y + ", " + z + "),");
+    }

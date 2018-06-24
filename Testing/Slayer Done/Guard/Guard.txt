@@ -1,0 +1,61 @@
+import xobot.client.callback.listeners.MessageListener;
+import xobot.client.callback.listeners.PaintListener;
+import xobot.script.ActiveScript;
+import xobot.script.Manifest;
+import xobot.script.methods.*;
+import xobot.script.util.Time;
+import xobot.script.wrappers.Tile;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    //data Data = new data();
+
+    Tile faladorGuardTile = new Tile(2965, 3380);
+
+    private int state = -1;
+    public boolean isAtDestination = false;
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                teleportToArea();
+                break;
+                
+            case 2:
+                //Fight already at Falador
+                break;
+           
+            case 0:
+                goHome();
+                break;
+        }
+
+    }
+
+    private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }
+
+    private void teleportToArea() {
+        Teleport.teleport("Falador");
+        Time.sleep(2800, 3200);
+    }
+
+    private void getState() {
+        if (NPCs.getNearest(Data.teleportWizard) != null) {
+            state = 1;
+            isAtDestination = false;
+        } else if (Calculations.distanceTo(faladorGuardTile) <= 100 && Calculations.distanceTo(faladorGuardTile) >= 5) {
+            state = 2;
+            isAtDestination = true;        
+        } else {
+            state = 0;
+            isAtDestination = false;
+        }
+    }
+}

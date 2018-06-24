@@ -1,0 +1,68 @@
+import java.awt.Graphics;
+
+import xobot.client.callback.listeners.MessageListener;
+import xobot.client.callback.listeners.PaintListener;
+import xobot.script.ActiveScript;
+import xobot.script.Manifest;
+import xobot.script.methods.*;
+import xobot.script.methods.input.KeyBoard;
+import xobot.script.util.Time;
+import xobot.script.wrappers.Path;
+import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    public boolean isAtDestination = false;
+
+    Tile rockCrabsTile = new Tile(2688, 3718);
+
+
+    private int state = -1;
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                teleportToArea();
+                break;
+
+            case 2:
+                //Already at Rock crabs
+                break;
+
+            case 0:
+                goHome();
+                break;
+        }
+    }
+
+    private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }
+
+    private void teleportToArea() {
+        Teleport.teleport("Rock crabs");
+        Time.sleep(2800, 3200);
+
+    }
+
+    public void getState(){
+
+        if (NPCs.getNearest(4397) != null) {
+            state = 1;
+            isAtDestination = false;
+        } else if (Calculations.distanceTo(rockCrabsTile) <= 20) {
+            isAtDestination = true;
+            state = 2;
+        }
+        else {
+            state = 0;
+            isAtDestination = false;
+        }
+    }
+}

@@ -1,0 +1,93 @@
+import java.awt.Graphics;
+
+import xobot.client.callback.listeners.MessageListener;
+import xobot.client.callback.listeners.PaintListener;
+import xobot.script.ActiveScript;
+import xobot.script.Manifest;
+import xobot.script.methods.*;
+import xobot.script.util.Time;
+import xobot.script.wrappers.Path;
+import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    public boolean isAtHillGiantsLadder = false;
+    public boolean isAtDestination = false;
+
+    Tile lumbridgeTile = new Tile(3221, 3219);
+
+
+    private int state = -1;
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                //Teleport to Lumbridge
+                break;
+
+            case 2:
+                //Already at Lumbridge
+                break;
+
+            case 0:
+                //goHome();
+                break;
+        }
+    }
+
+    /*private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }*/
+
+    public void getState(){
+
+        if (NPCs.getNearest(4397) != null) {
+            System.out.println("Teleporting.");
+            state = 1;
+            isAtDestination = false;
+        } else if (Calculations.distanceTo(lumbridgeTile) < 20) {
+            isAtDestination = true;
+            System.out.println("At Lumbridge.");
+            state = 2;
+        }
+        else {
+            state = 0;
+            System.out.println("Teleporting home");
+            isAtDestination = false;
+        }
+    }
+
+    public boolean onStart() {
+
+        return true;
+    }
+
+
+
+
+        @Override
+        public void repaint(Graphics g1) {
+
+
+        }
+
+
+        @Override
+        public int loop() {
+            walkTo();
+
+
+            return 200;
+        }
+
+    @Override
+    public void MessageRecieved(int i, String s, String s1, String s2) {
+
+    }
+}

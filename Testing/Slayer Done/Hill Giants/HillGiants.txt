@@ -1,0 +1,135 @@
+import java.awt.Graphics;
+
+import xobot.client.callback.listeners.MessageListener;
+import xobot.client.callback.listeners.PaintListener;
+import xobot.script.ActiveScript;
+import xobot.script.Manifest;
+import xobot.script.methods.*;
+import xobot.script.util.Time;
+import xobot.script.wrappers.Path;
+import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    public boolean isAtHillGiantsLadder = false;
+    public boolean isAtDestination = false;
+
+
+    private int state = -1;
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                walkToMonster();
+                break;
+
+            case 2:
+                climbDownLadder();
+                break;
+
+            case 3:
+                //Fight
+                System.out.println("At Hill Giants!");
+                break;
+
+            case 0:
+                //goHome();
+                break;
+        }
+    }
+
+    Tile one = new Tile(3097, 3502);
+    Tile two = new Tile(3112, 3508);
+    Tile three = new Tile(3127, 3515);
+    Tile four = new Tile(3133, 3500);
+    Tile five = new Tile(3129, 3484);
+    Tile six = new Tile(3136, 3469);
+    Tile seven = new Tile(3124,3456);
+    Tile eigth = new Tile(3115, 3452);
+
+    Tile atHillGiants = new Tile(3118, 9859);
+
+
+
+    Tile[] tileArray = {
+           one, two, three, four, five, six, seven, eigth
+    };
+
+    public void walkToMonster() {
+        System.out.println("Walking to ladder");
+        Path p = new Path(tileArray);
+        while (Calculations.distanceTo(new Tile(1, 1)) > 5 && !Players.getMyPlayer().isMoving()) {
+            Tile a = p.getNextTile();
+            Walking.walkTo(a);
+            Time.sleep(3500);
+            isAtHillGiantsLadder = true;
+        }
+
+    }
+
+    public void climbDownLadder(){
+        System.out.println("Climbing down ladder");
+        GameObject hillGiantLadder = GameObjects.getNearest(17384);
+        if (hillGiantLadder != null){
+            hillGiantLadder.interact("Climb-down");
+            Time.sleep(3000);
+            isAtHillGiantsLadder = false;
+        }
+    }
+
+    /*private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }*/
+
+    public void getState(){
+        if (Calculations.distanceTo(eigth) > 4
+                && Calculations.distanceTo(eigth) < 80) {
+            state = 1;
+            isAtDestination = false;
+        } else if (Calculations.distanceTo(eigth) < 8) {
+            isAtHillGiantsLadder = true;
+            state = 2;
+        }  else if (Calculations.distanceTo(atHillGiants) < 8){
+            isAtDestination = true;
+            state = 3;
+        }
+        else {
+            state = 0;
+            isAtDestination = false;
+        }
+    }
+
+    public boolean onStart() {
+
+        return true;
+    }
+
+
+
+
+        @Override
+        public void repaint(Graphics g1) {
+
+
+        }
+
+
+        @Override
+        public int loop() {
+            walkTo();
+
+
+            return 200;
+        }
+
+    @Override
+    public void MessageRecieved(int i, String s, String s1, String s2) {
+
+    }
+}

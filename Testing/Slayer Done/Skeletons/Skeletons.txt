@@ -1,0 +1,120 @@
+import xobot.script.methods.GameObjects;
+import xobot.client.callback.listeners.MessageListener;
+import xobot.client.callback.listeners.PaintListener;
+import xobot.script.ActiveScript;
+import xobot.script.Manifest;
+import xobot.script.methods.*;
+import xobot.script.methods.input.KeyBoard;
+import xobot.script.util.Time;
+import xobot.script.wrappers.Path;
+import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
+
+import java.awt.*;
+
+@Manifest(authors = { "xBear" }, name = "monster", version = 1.0, description = "Cuts gems into Bolt Tips.")
+
+public final class monster extends ActiveScript implements PaintListener, MessageListener {
+
+    //data Data = new data();
+
+    Tile edgevilleDungeonSkeletonsTile = new Tile(3095, 9901);
+    public Tile[] edgevilleDungeonSkeletonsPath = { new Tile(3098, 9882, 0), new Tile(3095, 9897, 0)};
+
+    private int state = -1;
+    public boolean isAtDestination = false;
+    public boolean isAtEdgevilleDungeonLadder = false;
+    public boolean trapDoorIsAlreadOpen = false;
+
+    Tile edgevilleDungeonLadderTile = new Tile(3095, 3469);
+
+    public void walkTo() {
+        getState();
+        switch (state) {
+            case 1:
+                walkToMonster();
+                break;
+            case 2:
+                //Already at Skeletons
+                break;
+
+            case 3:
+                walkToEdgevilleDungeonLadder();
+                break;
+
+            case 4:
+                if (isAtEdgevilleDungeonLadder == true){
+                    if (trapDoorIsAlreadOpen == false) {
+                        System.out.println("Opening trap door");
+                        openTrapDoor();
+                        break;
+                    }
+                }
+
+
+            case 0:
+                goHome();
+                break;
+        }
+
+    }
+
+    public void walkToEdgevilleDungeonLadder(){
+        Walking.walkTo(edgevilleDungeonLadderTile);
+    }
+
+    public void climbInEdgevilleDungeon(){
+        GameObject ladder = GameObjects.getNearest(1581);
+        if (ladder != null){
+            ladder.interact("Climb-down");
+            Time.sleep(2000);
+        }
+    }
+
+    public void openTrapDoor(){
+        GameObject trapdoor = GameObjects.getNearest(1580); // 1581 means open 1580 means closed
+        if (trapdoor != null){
+            trapdoor.interact("Open");
+            trapDoorIsAlreadOpen = false;
+        } else {
+            climbInEdgevilleDungeon();
+        }
+    }
+
+    private void goHome() {
+        KeyBoard.typeWord("::home", true);
+        Time.sleep(2400, 3000);
+
+    }
+
+    private void walkToMonster() {
+        Path p = new Path(edgevilleDungeonSkeletonsPath);
+        while (Calculations.distanceTo(edgevilleDungeonSkeletonsTile) > 3 && !Players.getMyPlayer().isMoving() && Calculations.distanceTo(edgevilleDungeonSkeletonsTile) <= 100 && !new Tile(3056, 9555).isReachable()) {
+            Tile a = p.getNextTile();
+            Walking.walkTo(a);
+            Time.sleep(3500);
+        }
+
+    }
+
+    private void getState() {
+        if (Calculations.distanceTo(edgevilleDungeonSkeletonsTile) <= 40 && Calculations.distanceTo(edgevilleDungeonSkeletonsTile) >= 5) {
+            state = 1;
+            isAtDestination = false;
+        } else if (edgevilleDungeonSkeletonsTile.isReachable()){
+            state = 2;
+            isAtDestination = true;
+        } else if (Calculations.distanceTo(edgevilleDungeonLadderTile) <= 60 && Calculations.distanceTo(edgevilleDungeonLadderTile) >= 7){
+            state = 3;
+            isAtEdgevilleDungeonLadder = false;
+        } else if (edgevilleDungeonLadderTile.isReachable()){
+            state = 4;
+            isAtEdgevilleDungeonLadder = true;
+        }
+
+        else {
+            state = 0;
+            isAtDestination = false;
+        }
+    }
+}
