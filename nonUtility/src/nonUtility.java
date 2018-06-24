@@ -4,6 +4,7 @@ import xobot.client.callback.listeners.PaintListener;
 import xobot.script.ActiveScript;
 import xobot.script.Manifest;
 import xobot.script.methods.NPCs;
+import xobot.script.wrappers.Tile;
 import xobot.script.wrappers.interactive.NPC;
 
 import java.awt.*;
@@ -39,6 +40,8 @@ public final class nonUtility extends ActiveScript implements PaintListener, Mes
     public void MessageRecieved(String msg, int i, String s1) {
 
     }
+
+
 
     @Override
     public void repaint(Graphics g1) {

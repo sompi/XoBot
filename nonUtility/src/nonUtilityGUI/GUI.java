@@ -1,6 +1,7 @@
 package nonUtilityGUI;
 
 import xobot.script.methods.NPCs;
+import xobot.script.methods.Players;
 import xobot.script.methods.tabs.Equipment;
 import xobot.script.methods.tabs.Inventory;
 import xobot.script.wrappers.interactive.Item;
@@ -10,6 +11,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -35,7 +37,7 @@ public class GUI {
     public GUI() {
         initialize();
         x.setVisible(true);
-        x.setAlwaysOnTop(true);
+        x.setAlwaysOnTop(false);
         isAlreadyVisible = true;
     }
 
@@ -107,6 +109,31 @@ public class GUI {
             }
         });
 
+
+        getEquipment.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                makeFile("Equipment");
+                try {
+                    writeEquipment();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        deleteEquipment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Clicked to delete file");
+                try {
+                    deleteEquipmentFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         getNPC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 makeFile("NPCS");
@@ -126,6 +153,47 @@ public class GUI {
                 distanceToDrawForNPCS = drawDistanceNPCS.getValue();
             }
         });
+
+        deleteNPCS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Clicked to delete file");
+                try {
+                    deleteNPCSFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        getTile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Tile information.");
+                makeFile("Tile");
+                try {
+                    writeTile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        deleteTile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Clicked to delete file");
+                try {
+                    deleteTileFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+
+
+
 
         /* Tab Events handlers */
 
@@ -539,6 +607,22 @@ public class GUI {
         Files.delete(fileToDeletePath);
     }
 
+    public void writeEquipment() throws IOException{
+        FileWriter fw = new FileWriter(XoBotFolder + "/Equipment.txt", true);
+        System.out.println("Writing in " + XoBotFolder + "/Equipment.txt");
+        BufferedWriter bw = new BufferedWriter(fw);
+        for (Item item: Equipment.getEquipment()) {
+            bw.write("public static int " + item.getDefinition().getName().toUpperCase().replace(" ", "_") + " = " + item.getID() + ";");
+            bw.newLine();
+        }
+        bw.close();
+    }
+
+    public static void deleteEquipmentFile() throws IOException {
+        Path fileToDeletePath = Paths.get(XoBotFolder + "/Equipment.txt");
+        Files.delete(fileToDeletePath);
+    }
+
     public void writeNPCS() throws IOException {
         List<Object> NPCIDS = new ArrayList<>();
         FileWriter fw = new FileWriter(XoBotFolder + "/NPCS.txt", true);
@@ -561,22 +645,29 @@ public class GUI {
         Files.delete(fileToDeletePath);
     }
 
+    public void writeTile() throws IOException {
 
-    public void writeEquipment() throws IOException{
-        FileWriter fw = new FileWriter(XoBotFolder + "/Equipment.txt", true);
-        System.out.println("Writing in " + XoBotFolder + "/Equipment.txt");
+        int X = Players.getMyPlayer().getLocation().getX();
+        int Y = Players.getMyPlayer().getLocation().getY();
+        int Plane = Players.getMyPlayer().getLocation().getPlane();
+
+        FileWriter fw = new FileWriter(XoBotFolder + "/Tile.txt", true);
+        System.out.println("Writing in " + XoBotFolder + "/Tile.txt");
         BufferedWriter bw = new BufferedWriter(fw);
-        for (Item item: Equipment.getEquipment()) {
-            bw.write("public static int " + item.getDefinition().getName().toUpperCase().replace(" ", "_") + " = " + item.getID() + ";");
-            bw.newLine();
-        }
+       //    public static Tile tile = new Tile(1, 1, 0);
+        bw.write("public static Tile tileName = new Tile(" + X + ", " + Y + ", " + Plane + ");");
+        bw.newLine();
         bw.close();
+
     }
 
-    public static void deleteEquipmentFile() throws IOException {
-        Path fileToDeletePath = Paths.get(XoBotFolder + "/Equipment.txt");
+    public static void deleteTileFile() throws IOException {
+        Path fileToDeletePath = Paths.get(XoBotFolder + "/Tile.txt");
         Files.delete(fileToDeletePath);
     }
+
+
+
 
 
 
