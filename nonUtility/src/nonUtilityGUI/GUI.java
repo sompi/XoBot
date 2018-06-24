@@ -3,6 +3,7 @@ package nonUtilityGUI;
 import xobot.script.methods.GameObjects;
 import xobot.script.methods.NPCs;
 import xobot.script.methods.Players;
+import xobot.script.methods.Shop;
 import xobot.script.methods.tabs.Equipment;
 import xobot.script.methods.tabs.Inventory;
 import xobot.script.wrappers.Area;
@@ -285,6 +286,30 @@ public class GUI {
                 System.out.println("Clicked to delete file");
                 try {
                     deleteGameObjectsFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        getShopItems.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                makeFile("Shop");
+                try {
+                    writeShop();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        deleteShop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Clicked to delete file");
+                try {
+                    deleteShopFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -789,7 +814,7 @@ public class GUI {
         BufferedWriter bw = new BufferedWriter(fw);
         for (GameObject object : GameObjects.getAll()){
             if (object != null && object.getDistance() <= drawDistanceGameObjects.getValue()){
-                bw.write("public static int " + object.object.getClass().getTypeName().toUpperCase().replace(" ", "_") + " = " + object.getId() + ";");
+                bw.write("public static int " + object.getClass().getName().toUpperCase().replace(" ", "_") + " = " + object.getId() + ";");
                 bw.newLine();
             }
         }
@@ -800,6 +825,26 @@ public class GUI {
 
     public static void deleteGameObjectsFile() throws IOException {
         Path fileToDeletePath = Paths.get(XoBotFolder + "/GameObjects.txt");
+        Files.delete(fileToDeletePath);
+    }
+
+    public void writeShop() throws IOException {
+        FileWriter fw = new FileWriter(XoBotFolder + "/Shop.txt", true);
+        System.out.println("Writing in " + XoBotFolder + "/Shop.txt");
+        BufferedWriter bw = new BufferedWriter(fw);
+        for (Item item : Shop.getItems()) {
+            if (item != null && Shop.isOpen()) {
+                bw.write("public static int " + item.getDefinition().getName().toUpperCase().replace(" ", "_") + " = " + item.getID() + ";");
+                bw.newLine();
+            }
+        }
+
+        bw.close();
+
+    }
+
+    public static void deleteShopFile() throws IOException {
+        Path fileToDeletePath = Paths.get(XoBotFolder + "/Shop.txt");
         Files.delete(fileToDeletePath);
     }
 }

@@ -20,15 +20,6 @@ import nonUtilityGUI.*;
 
 public final class nonUtility extends ActiveScript implements PaintListener, MessageListener {
 
-    public String fileName;
-
-
-
-
-
-
-
-
     @Override
     public boolean onStart(){
         GUI.makeFolder();
