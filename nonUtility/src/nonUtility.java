@@ -3,10 +3,12 @@ import xobot.client.callback.listeners.MessageListener;
 import xobot.client.callback.listeners.PaintListener;
 import xobot.script.ActiveScript;
 import xobot.script.Manifest;
+import xobot.script.methods.GameObjects;
 import xobot.script.methods.NPCs;
 import xobot.script.methods.Players;
 import xobot.script.wrappers.Area;
 import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
 import xobot.script.wrappers.interactive.NPC;
 
 import java.awt.*;
@@ -65,7 +67,12 @@ public final class nonUtility extends ActiveScript implements PaintListener, Mes
         }
 
         if (GUI.atGameObjectsTab){
-            //Draw Game Objects
+            for (GameObject object : GameObjects.getAll()) {
+                if (object != null && object.getDistance() <= GUI.distanceToDrawForGameObjects){
+                    object.getLocation().draw(g1, Color.ORANGE);
+                }
+
+            }
         }
 
 

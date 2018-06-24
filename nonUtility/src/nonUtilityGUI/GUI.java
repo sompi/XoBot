@@ -1,11 +1,13 @@
 package nonUtilityGUI;
 
+import xobot.script.methods.GameObjects;
 import xobot.script.methods.NPCs;
 import xobot.script.methods.Players;
 import xobot.script.methods.tabs.Equipment;
 import xobot.script.methods.tabs.Inventory;
 import xobot.script.wrappers.Area;
 import xobot.script.wrappers.Tile;
+import xobot.script.wrappers.interactive.GameObject;
 import xobot.script.wrappers.interactive.Item;
 import xobot.script.wrappers.interactive.NPC;
 
@@ -30,6 +32,7 @@ public class GUI {
     private JDialog x;
     public static boolean isAlreadyVisible = false;
     public static int distanceToDrawForNPCS = 0;
+    public static int distanceToDrawForGameObjects = 0;
 
 
     public static boolean atNPCTab = false;
@@ -42,7 +45,6 @@ public class GUI {
     public static int areaEndX;
     public static int areaEndY;
     public static Area areaToDraw = new Area( areaStartX,  areaStartY,  areaEndX, areaEndY);
-    public static Area testDraw = new Area(1, 1, 1, 1);
 
     public GUI() {
         initialize();
@@ -249,6 +251,39 @@ public class GUI {
                 System.out.println("Clicked to delete file");
                 try {
                     deleteAreaFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        getGameObjects.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                makeFile("GameObjects");
+                try {
+                    writeGameObjects();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+        drawDistanceGameObjects.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+                System.out.println(drawDistanceGameObjects.getValue());
+                distanceToDrawForGameObjects = drawDistanceGameObjects.getValue();
+            }
+        });
+
+        deleteGameObjects.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Clicked to delete file");
+                try {
+                    deleteGameObjectsFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -744,6 +779,26 @@ public class GUI {
 
     public static void deleteAreaFile() throws IOException {
         Path fileToDeletePath = Paths.get(XoBotFolder + "/Area.txt");
+        Files.delete(fileToDeletePath);
+    }
+
+    public void writeGameObjects() throws IOException {
+        FileWriter fw = new FileWriter(XoBotFolder + "/GameObjects.txt", true);
+        System.out.println("Writing in " + XoBotFolder + "/GameObjects.txt");
+        BufferedWriter bw = new BufferedWriter(fw);
+        for (GameObject object : GameObjects.getAll()){
+            if (object != null && object.getDistance() <= drawDistanceGameObjects.getValue()){
+                bw.write("public static int " + object.toString().toUpperCase().replace(" ", "_") + " = " + object.getId() + ";");
+                bw.newLine();
+            }
+        }
+
+        bw.close();
+
+    }
+
+    public static void deleteGameObjectsFile() throws IOException {
+        Path fileToDeletePath = Paths.get(XoBotFolder + "/GameObjects.txt");
         Files.delete(fileToDeletePath);
     }
 }
