@@ -11,7 +11,6 @@ import java.awt.*;
 import nonUtilityGUI.*;
 
 
-
 @Manifest(authors = { "xBear" }, name = "nonUtility", version = 1.0, description = "Gets easily some valueable information for you.")
 
 public final class nonUtility extends ActiveScript implements PaintListener, MessageListener {
@@ -43,11 +42,24 @@ public final class nonUtility extends ActiveScript implements PaintListener, Mes
 
     @Override
     public void repaint(Graphics g1) {
-        for (NPC npc : NPCs.getAll()){
-            if (npc != null && npc.getDistance() <= GUI.drawDistanceRange ){
-                npc.getLocation().draw(g1, Color.CYAN);
+        //Only draw NPC's when NPC Tab is selected.
+        if (GUI.atNPCTab) {
+            for (NPC npc : NPCs.getAll()) {
+                if (npc != null && npc.getDistance() <= GUI.distanceToDrawForNPCS) {
+                    npc.getLocation().draw(g1, Color.CYAN);
+                }
             }
         }
+
+        if (GUI.atAreaTab){
+            //Draw Area if Tiles are set
+        }
+
+        if (GUI.atGameObjectsTab){
+            //Draw Game Objects
+        }
+
+
     }
 
 

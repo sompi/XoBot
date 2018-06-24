@@ -25,7 +25,12 @@ public class GUI {
     public static String XoBotFolder = getXobotPath() + "nonUtility/";
     private JDialog x;
     public static boolean isAlreadyVisible = false;
-    public static int drawDistanceRange = 0;
+    public static int distanceToDrawForNPCS = 0;
+
+
+    public static boolean atNPCTab = false;
+    public static boolean atGameObjectsTab = false;
+    public static boolean atAreaTab = false;
 
     public GUI() {
         initialize();
@@ -37,6 +42,7 @@ public class GUI {
     private void initialize(){
 
 
+        jPanel1 = new javax.swing.JPanel();
         tabPane = new javax.swing.JTabbedPane();
         inventoryTab = new javax.swing.JPanel();
         getInventoryItems = new javax.swing.JButton();
@@ -45,29 +51,36 @@ public class GUI {
         getEquipment = new javax.swing.JButton();
         deleteEquipment = new javax.swing.JButton();
         npcTab = new javax.swing.JPanel();
-        drawDistance = new javax.swing.JSlider();
-        label_MaxDrawDistance = new javax.swing.JLabel();
+        drawDistanceNPCS = new javax.swing.JSlider();
+        label_MaxDrawDistanceNPCS = new javax.swing.JLabel();
         getNPC = new javax.swing.JButton();
-        getNPCFormat = new javax.swing.JTextField();
-        drawNPCS = new javax.swing.JButton();
+        deleteNPCS = new javax.swing.JButton();
+        tileTab = new javax.swing.JPanel();
+        getTile = new javax.swing.JButton();
+        deleteTile = new javax.swing.JButton();
+        areaTab = new javax.swing.JPanel();
+        getTileStart = new javax.swing.JButton();
+        getTileEnd = new javax.swing.JButton();
+        saveArea = new javax.swing.JButton();
+        areaShow = new javax.swing.JButton();
+        deleteArea = new javax.swing.JButton();
+        gameObjectTab = new javax.swing.JPanel();
+        getGameObjects = new javax.swing.JButton();
+        deleteGameObjects = new javax.swing.JButton();
+        label_MaxDrawDistanceGameObjects = new javax.swing.JLabel();
+        drawDistanceGameObjects = new javax.swing.JSlider();
+        shopTab = new javax.swing.JPanel();
+        getShopItems = new javax.swing.JButton();
+        deleteShop = new javax.swing.JButton();
 
 
         x = new JDialog();
         JPanel panel = new JPanel();
         x.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         x.setTitle("nonUtility");
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(panel);
-        panel.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 100, Short.MAX_VALUE)
-        );
 
-        getInventoryItems.setText("Inventory items");
+        /* Event Handlers */
+
         getInventoryItems.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 System.out.println("Getting inventory data");
@@ -82,7 +95,6 @@ public class GUI {
             }
         });
 
-        deleteInventory.setText("Delete inventory");
         deleteInventory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 System.out.println("Clicked to delete file");
@@ -95,6 +107,75 @@ public class GUI {
             }
         });
 
+        getNPC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                makeFile("NPCS");
+                try {
+                    writeNPCS();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+        drawDistanceNPCS.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+                distanceToDrawForNPCS = drawDistanceNPCS.getValue();
+            }
+        });
+
+        /* Tab Events handlers */
+
+        tabPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent changeEvent) {
+
+
+
+                if (tabPane.getSelectedIndex() == 2){
+                    atNPCTab = true;
+                } else {
+                    atNPCTab = false;
+                }
+
+                if (tabPane.getSelectedIndex() == 4){
+                    atAreaTab = true;
+                } else {
+                    atAreaTab = false;
+                }
+
+                if (tabPane.getSelectedIndex() == 5){
+                    atGameObjectsTab = true;
+                } else {
+                    atGameObjectsTab = false;
+                }
+
+
+
+            }
+        });
+
+
+
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        getInventoryItems.setText("Inventory");
+
+        deleteInventory.setText("Delete inventory file");
+
         javax.swing.GroupLayout inventoryTabLayout = new javax.swing.GroupLayout(inventoryTab);
         inventoryTab.setLayout(inventoryTabLayout);
         inventoryTabLayout.setHorizontalGroup(
@@ -104,7 +185,7 @@ public class GUI {
                                 .addComponent(getInventoryItems)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(deleteInventory)
-                                .addContainerGap(255, Short.MAX_VALUE))
+                                .addContainerGap(263, Short.MAX_VALUE))
         );
         inventoryTabLayout.setVerticalGroup(
                 inventoryTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,9 +201,7 @@ public class GUI {
 
         getEquipment.setText("Equipment");
 
-
         deleteEquipment.setText("Delete equipment file");
-
 
         javax.swing.GroupLayout equipmentTabLayout = new javax.swing.GroupLayout(equipmentTab);
         equipmentTab.setLayout(equipmentTabLayout);
@@ -133,7 +212,7 @@ public class GUI {
                                 .addComponent(getEquipment)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(deleteEquipment)
-                                .addContainerGap(249, Short.MAX_VALUE))
+                                .addContainerGap(257, Short.MAX_VALUE))
         );
         equipmentTabLayout.setVerticalGroup(
                 equipmentTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,43 +226,19 @@ public class GUI {
 
         tabPane.addTab("Equipment", equipmentTab);
 
-        drawDistance.setMajorTickSpacing(5);
-        drawDistance.setMaximum(30);
-        drawDistance.setMinorTickSpacing(1);
-        drawDistance.setPaintLabels(true);
-        drawDistance.setPaintTicks(true);
-        drawDistance.setSnapToTicks(true);
-        drawDistance.setValue(10);
+        drawDistanceNPCS.setMajorTickSpacing(5);
+        drawDistanceNPCS.setMaximum(30);
+        drawDistanceNPCS.setMinorTickSpacing(1);
+        drawDistanceNPCS.setPaintLabels(true);
+        drawDistanceNPCS.setPaintTicks(true);
+        drawDistanceNPCS.setSnapToTicks(true);
+        drawDistanceNPCS.setValue(10);
 
-        label_MaxDrawDistance.setText("Get from maxium distance");
+        label_MaxDrawDistanceNPCS.setText("Get from maxium distance");
 
         getNPC.setText("Get NPC");
-        getNPCFormat.setText("public static int");
 
-
-        getNPC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                System.out.println("Gettinh NPC data");
-                makeFile("NPCS");
-                try {
-                    writeNPCS();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        });
-
-        drawDistance.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                System.out.println(drawDistance.getValue());
-                drawDistanceRange = drawDistance.getValue();
-            }
-        });
-
-
+        deleteNPCS.setText("Delete NPCS file");
 
         javax.swing.GroupLayout npcTabLayout = new javax.swing.GroupLayout(npcTab);
         npcTab.setLayout(npcTabLayout);
@@ -192,19 +247,16 @@ public class GUI {
                         .addGroup(npcTabLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(npcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(npcTabLayout.createSequentialGroup()
-                                                .addComponent(getNPCFormat, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(npcTabLayout.createSequentialGroup()
-                                                .addComponent(getNPC)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
-                                                .addGroup(npcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, npcTabLayout.createSequentialGroup()
-                                                                .addComponent(drawDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap())
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, npcTabLayout.createSequentialGroup()
-                                                                .addComponent(label_MaxDrawDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(46, 46, 46))))))
+                                        .addComponent(getNPC)
+                                        .addComponent(deleteNPCS))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                                .addGroup(npcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, npcTabLayout.createSequentialGroup()
+                                                .addComponent(drawDistanceNPCS, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap())
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, npcTabLayout.createSequentialGroup()
+                                                .addComponent(label_MaxDrawDistanceNPCS, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(46, 46, 46))))
         );
         npcTabLayout.setVerticalGroup(
                 npcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,22 +264,173 @@ public class GUI {
                                 .addContainerGap()
                                 .addGroup(npcTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(npcTabLayout.createSequentialGroup()
-                                                .addComponent(drawDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(drawDistanceNPCS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(label_MaxDrawDistance))
-                                        .addComponent(getNPC))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                                .addComponent(getNPCFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(81, 81, 81))
+                                                .addComponent(label_MaxDrawDistanceNPCS))
+                                        .addGroup(npcTabLayout.createSequentialGroup()
+                                                .addComponent(getNPC)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(deleteNPCS)))
+                                .addContainerGap(166, Short.MAX_VALUE))
         );
 
+        deleteNPCS.getAccessibleContext().setAccessibleName("Delete NPCS file");
+
         tabPane.addTab("NPC", npcTab);
+
+        getTile.setText("Get Tile");
+
+        deleteTile.setText("Delete Tile file");
+
+        javax.swing.GroupLayout tileTabLayout = new javax.swing.GroupLayout(tileTab);
+        tileTab.setLayout(tileTabLayout);
+        tileTabLayout.setHorizontalGroup(
+                tileTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(tileTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(tileTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(getTile)
+                                        .addComponent(deleteTile))
+                                .addContainerGap(380, Short.MAX_VALUE))
+        );
+        tileTabLayout.setVerticalGroup(
+                tileTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(tileTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(getTile)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteTile)
+                                .addContainerGap(184, Short.MAX_VALUE))
+        );
+
+        tabPane.addTab("Tile", tileTab);
+
+        getTileStart.setText("Get Tile Start");
+
+        getTileEnd.setText("Get Tile End");
+
+        saveArea.setText("Save Area");
+
+        areaShow.setText("Show Area");
+
+        deleteArea.setText("Delete Area file");
+
+        javax.swing.GroupLayout areaTabLayout = new javax.swing.GroupLayout(areaTab);
+        areaTab.setLayout(areaTabLayout);
+        areaTabLayout.setHorizontalGroup(
+                areaTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(areaTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(areaTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(saveArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(getTileStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(areaTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(getTileEnd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(deleteArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(areaShow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(180, 180, 180))
+        );
+        areaTabLayout.setVerticalGroup(
+                areaTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(areaTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(areaTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(getTileStart)
+                                        .addComponent(getTileEnd)
+                                        .addComponent(areaShow))
+                                .addGap(18, 18, 18)
+                                .addGroup(areaTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(saveArea)
+                                        .addComponent(deleteArea))
+                                .addContainerGap(172, Short.MAX_VALUE))
+        );
+
+        tabPane.addTab("Area", areaTab);
+
+        getGameObjects.setText("Get GameObjects");
+
+        deleteGameObjects.setText("Delete GameObjects file");
+
+        label_MaxDrawDistanceGameObjects.setText("Get from maxium distance");
+
+        drawDistanceGameObjects.setMajorTickSpacing(5);
+        drawDistanceGameObjects.setMaximum(30);
+        drawDistanceGameObjects.setMinorTickSpacing(1);
+        drawDistanceGameObjects.setPaintLabels(true);
+        drawDistanceGameObjects.setPaintTicks(true);
+        drawDistanceGameObjects.setSnapToTicks(true);
+        drawDistanceGameObjects.setValue(10);
+
+        javax.swing.GroupLayout gameObjectTabLayout = new javax.swing.GroupLayout(gameObjectTab);
+        gameObjectTab.setLayout(gameObjectTabLayout);
+        gameObjectTabLayout.setHorizontalGroup(
+                gameObjectTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(gameObjectTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(gameObjectTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(getGameObjects)
+                                        .addComponent(deleteGameObjects))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                                .addGroup(gameObjectTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gameObjectTabLayout.createSequentialGroup()
+                                                .addComponent(drawDistanceGameObjects, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap())
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gameObjectTabLayout.createSequentialGroup()
+                                                .addComponent(label_MaxDrawDistanceGameObjects, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(46, 46, 46))))
+        );
+        gameObjectTabLayout.setVerticalGroup(
+                gameObjectTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(gameObjectTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(gameObjectTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(gameObjectTabLayout.createSequentialGroup()
+                                                .addComponent(drawDistanceGameObjects, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(label_MaxDrawDistanceGameObjects))
+                                        .addGroup(gameObjectTabLayout.createSequentialGroup()
+                                                .addComponent(getGameObjects)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(deleteGameObjects)))
+                                .addContainerGap(166, Short.MAX_VALUE))
+        );
+
+        tabPane.addTab("Game Object", gameObjectTab);
+
+        getShopItems.setText("Shop items");
+
+        deleteShop.setText("Delete shop file");
+
+        javax.swing.GroupLayout shopTabLayout = new javax.swing.GroupLayout(shopTab);
+        shopTab.setLayout(shopTabLayout);
+        shopTabLayout.setHorizontalGroup(
+                shopTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(shopTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(getShopItems)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteShop)
+                                .addContainerGap(281, Short.MAX_VALUE))
+        );
+        shopTabLayout.setVerticalGroup(
+                shopTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(shopTabLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(shopTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(getShopItems)
+                                        .addComponent(deleteShop))
+                                .addContainerGap(213, Short.MAX_VALUE))
+        );
+
+        tabPane.addTab("Shop", shopTab);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(x.getContentPane());
         x.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(tabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+                        .addComponent(tabPane)
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,19 +445,36 @@ public class GUI {
 
     }
 
+    private javax.swing.JButton areaShow;
+    private javax.swing.JPanel areaTab;
+    private javax.swing.JButton deleteArea;
     private javax.swing.JButton deleteEquipment;
+    private javax.swing.JButton deleteGameObjects;
     private javax.swing.JButton deleteInventory;
-    private static javax.swing.JSlider drawDistance;
-    private javax.swing.JButton drawNPCS;
+    private javax.swing.JButton deleteNPCS;
+    private javax.swing.JButton deleteShop;
+    private javax.swing.JButton deleteTile;
+    public static javax.swing.JSlider drawDistanceGameObjects;
+    public static javax.swing.JSlider drawDistanceNPCS;
     private javax.swing.JPanel equipmentTab;
+    private javax.swing.JPanel gameObjectTab;
     private javax.swing.JButton getEquipment;
+    private javax.swing.JButton getGameObjects;
     private javax.swing.JButton getInventoryItems;
     private javax.swing.JButton getNPC;
+    private javax.swing.JButton getShopItems;
+    private javax.swing.JButton getTile;
+    private javax.swing.JButton getTileEnd;
+    private javax.swing.JButton getTileStart;
     private javax.swing.JPanel inventoryTab;
-    private javax.swing.JLabel label_MaxDrawDistance;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel label_MaxDrawDistanceGameObjects;
+    private javax.swing.JLabel label_MaxDrawDistanceNPCS;
     private javax.swing.JPanel npcTab;
+    private javax.swing.JButton saveArea;
+    private javax.swing.JPanel shopTab;
     private javax.swing.JTabbedPane tabPane;
-    private javax.swing.JTextField getNPCFormat;
+    private javax.swing.JPanel tileTab;
 
 
 
@@ -325,9 +545,9 @@ public class GUI {
         System.out.println("Writing in " + XoBotFolder + "/NPCS.txt");
         BufferedWriter bw = new BufferedWriter(fw);
         for (NPC npc : NPCs.getAll()){
-            if (npc != null && npc.getDistance() <= drawDistance.getValue() && npc.getId() != 1 && !NPCIDS.contains(npc.getId())){
+            if (npc != null && npc.getDistance() <= drawDistanceNPCS.getValue() && npc.getId() != 1 && !NPCIDS.contains(npc.getId())){
                 System.out.println("Adding " + npc.npc.getDef().getName() + " - " + npc.getId());
-                bw.write(getNPCFormat.getText() + " " + npc.npc.getDef().getName().toUpperCase().replace(" ", "_") + " = " + npc.getId() + ";");
+                bw.write("public static int " + npc.npc.getDef().getName().toUpperCase().replace(" ", "_") + " = " + npc.getId() + ";");
                 bw.newLine();
             }
         }
