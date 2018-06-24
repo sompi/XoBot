@@ -44,7 +44,7 @@ public class GUI {
     public static int areaStartY;
     public static int areaEndX;
     public static int areaEndY;
-    public static Area areaToDraw = new Area( areaStartX,  areaStartY,  areaEndX, areaEndY);
+    public static Area areaToDraw = new Area( 0,  0,  0, 0);
 
     public GUI() {
         initialize();
@@ -224,6 +224,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 System.out.println("Drawing area!");
+                areaToDraw = new Area(areaStartX, areaStartY, areaEndX, areaEndY);
                 showArea = true;
             }
         });
@@ -788,7 +789,7 @@ public class GUI {
         BufferedWriter bw = new BufferedWriter(fw);
         for (GameObject object : GameObjects.getAll()){
             if (object != null && object.getDistance() <= drawDistanceGameObjects.getValue()){
-                bw.write("public static int " + object.toString().toUpperCase().replace(" ", "_") + " = " + object.getId() + ";");
+                bw.write("public static int " + object.object.getClass().getTypeName().toUpperCase().replace(" ", "_") + " = " + object.getId() + ";");
                 bw.newLine();
             }
         }
