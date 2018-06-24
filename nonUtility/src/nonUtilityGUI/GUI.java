@@ -4,6 +4,8 @@ import xobot.script.methods.NPCs;
 import xobot.script.methods.Players;
 import xobot.script.methods.tabs.Equipment;
 import xobot.script.methods.tabs.Inventory;
+import xobot.script.wrappers.Area;
+import xobot.script.wrappers.Tile;
 import xobot.script.wrappers.interactive.Item;
 import xobot.script.wrappers.interactive.NPC;
 
@@ -34,10 +36,18 @@ public class GUI {
     public static boolean atGameObjectsTab = false;
     public static boolean atAreaTab = false;
 
+    public static boolean showArea = false;
+    public static int areaStartX;
+    public static int areaStartY;
+    public static int areaEndX;
+    public static int areaEndY;
+    public static Area areaToDraw = new Area( areaStartX,  areaStartY,  areaEndX, areaEndY);
+    public static Area testDraw = new Area(1, 1, 1, 1);
+
     public GUI() {
         initialize();
         x.setVisible(true);
-        x.setAlwaysOnTop(false);
+        x.setAlwaysOnTop(true);
         isAlreadyVisible = true;
     }
 
@@ -184,6 +194,61 @@ public class GUI {
                 System.out.println("Clicked to delete file");
                 try {
                     deleteTileFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        /* Area */
+
+        saveArea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                makeFile("Area");
+                try {
+                    writeArea();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+
+
+        areaShow.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Drawing area!");
+                showArea = true;
+            }
+        });
+
+        getTileStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                areaStartX = Players.getMyPlayer().getLocation().getX();
+                areaStartY = Players.getMyPlayer().getLocation().getY();
+                System.out.println("Start X " + areaStartX + " Start Y " + areaStartY);
+            }
+        });
+
+        getTileEnd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                areaEndX = Players.getMyPlayer().getLocation().getX();
+                areaEndY = Players.getMyPlayer().getLocation().getY();
+                System.out.println("End X " + areaEndX + " End Y " + areaEndY);
+            }
+        });
+
+        deleteArea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                System.out.println("Clicked to delete file");
+                try {
+                    deleteAreaFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -666,9 +731,19 @@ public class GUI {
         Files.delete(fileToDeletePath);
     }
 
+    public void writeArea() throws IOException {
 
+        FileWriter fw = new FileWriter(XoBotFolder + "/Area.txt", true);
+        System.out.println("Writing in " + XoBotFolder + "/Area.txt");
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write("public static Area areaName = new Area("+ areaStartX + ", " + areaStartY + ", " + areaEndX + ", " + areaEndY + ");");
+        bw.newLine();
+        bw.close();
 
+    }
 
-
-
+    public static void deleteAreaFile() throws IOException {
+        Path fileToDeletePath = Paths.get(XoBotFolder + "/Area.txt");
+        Files.delete(fileToDeletePath);
+    }
 }

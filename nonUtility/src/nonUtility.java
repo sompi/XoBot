@@ -4,6 +4,8 @@ import xobot.client.callback.listeners.PaintListener;
 import xobot.script.ActiveScript;
 import xobot.script.Manifest;
 import xobot.script.methods.NPCs;
+import xobot.script.methods.Players;
+import xobot.script.wrappers.Area;
 import xobot.script.wrappers.Tile;
 import xobot.script.wrappers.interactive.NPC;
 
@@ -17,7 +19,6 @@ import nonUtilityGUI.*;
 public final class nonUtility extends ActiveScript implements PaintListener, MessageListener {
 
     public String fileName;
-
 
 
 
@@ -56,6 +57,11 @@ public final class nonUtility extends ActiveScript implements PaintListener, Mes
 
         if (GUI.atAreaTab){
             //Draw Area if Tiles are set
+            if (GUI.showArea == true && Players.getMyPlayer().getLocation().getX() != 0 && Players.getMyPlayer().getLocation().getY() != 0){
+                for (Tile tile : GUI.areaToDraw.getTileArray()){
+                    tile.draw(g1, Color.RED);
+              }
+            }
         }
 
         if (GUI.atGameObjectsTab){
