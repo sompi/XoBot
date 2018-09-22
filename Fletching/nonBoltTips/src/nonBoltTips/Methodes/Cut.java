@@ -19,9 +19,9 @@ public class Cut {
 		Item itemToCut = Inventory.getItem(Data.TO_CUT);
 		Item chisel = Inventory.getItem(Data.CHISEL_ID);
 			if (chisel != null && itemToCut != null) {
-				Packets.sendAction(447, Data.CHISEL_ID, chisel.getSlot(), 3214, 0, 0);
+				Packets.sendAction(447, Data.CHISEL_ID, chisel.getSlot(), 3214);
 				Time.sleep(200);
-				Packets.sendAction(870, Data.TO_CUT, itemToCut.getSlot(), 3214, 38150, 0);
+				Packets.sendAction(870, Data.TO_CUT, itemToCut.getSlot(), 3214);
 				Methodes.conditionalSleep(new SleepCondition() {
 					@Override
 					public boolean isValid() {
