@@ -16,18 +16,18 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
-      <library name="xobot.jar">
+      <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/xobot.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../xobot.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="317.jar">
+      <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Documents/XoBot/APIs/317.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../317.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -11,6 +11,7 @@ import nonGemCutter.Methodes.Banking;
 import nonGemCutter.Methodes.Cut;
 import xobot.client.callback.listeners.MessageListener;
 import xobot.client.callback.listeners.PaintListener;
+import xobot.client.events.MessageEvent;
 import xobot.script.ActiveScript;
 import xobot.script.Manifest;
 import xobot.script.methods.Bank;
@@ -32,18 +33,18 @@ public final class nonGemCutter extends ActiveScript implements PaintListener, M
 	
     private javax.swing.JButton start;
     private javax.swing.JComboBox<String> combo;
-	
-	@Override
-	public void MessageRecieved(String message, int arg1, String arg2) {
 
-		if (message.contains(Data.MSG_SAPPHIRE) || message.contains(Data.MSG_EMERALD) || message.contains(Data.MSG_RUBY) || message.contains(Data.MSG_DIAMOND)){
-			Data.GEMS_CUTTED += 1;
-		}
-	}
+
+    @Override
+    public void MessageRecieved(MessageEvent message) {
+        if (message.getMessage().contains(Data.MSG_SAPPHIRE) || message.getMessage().contains(Data.MSG_EMERALD) || message.getMessage().contains(Data.MSG_RUBY) || message.getMessage().contains(Data.MSG_DIAMOND)){
+            Data.GEMS_CUTTED += 1;
+        }
+    }
 	
 	public boolean onStart() {
 		this.t = new Timer(System.currentTimeMillis());
-		this.startXP = Skills.getCurrentExp(Skills.CRAFTING);
+		this.startXP = Skills.CRAFTING.getCurrentExp();
 		JDialog x = new JDialog();
 
         combo = new javax.swing.JComboBox<>();
@@ -130,9 +131,9 @@ public final class nonGemCutter extends ActiveScript implements PaintListener, M
 	public void repaint(Graphics g1) {
 		// TODO Auto-generated method stub
 		int cutPerHour = (int) (Data.GEMS_CUTTED * 3600000.0D / this.t.getElapsed());
-		int xpGained = Skills.getCurrentExp(Skills.CRAFTING) - this.startXP;
+		int xpGained = Skills.CRAFTING.getCurrentExp() - this.startXP;
 		int xpGainedhour = (int) (xpGained * 3600000.0D / t.getElapsed());
-		int currentLevel = Skills.getCurrentLevel(Skills.CRAFTING);
+		int currentLevel = Skills.CRAFTING.getCurrentLevel();
 		g1.drawString("Time running " + this.t.toElapsedString(), 50, 85);
 		g1.drawString("Gems cut " + NumberFormat.getNumberInstance(Locale.US).format(Data.GEMS_CUTTED), 50, 100);
 		g1.drawString("Gem cut (hr): " + NumberFormat.getNumberInstance(Locale.US).format(cutPerHour), 50, 115);
@@ -178,5 +179,6 @@ public final class nonGemCutter extends ActiveScript implements PaintListener, M
 
 		return 200;
 	}
-	
+
+
 }

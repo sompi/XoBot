@@ -32,7 +32,7 @@ public class Banking {
             Bank.deposit(Data.CUTTED, 28);
             Time.sleep(300);
             Bank.withdraw(Data.TO_CUT, 28);
-            Packets.sendAction(200, 0, 0, 0, 26972, 0); //Close bank
+            Packets.sendAction(200, 0, 5384, 0); //Close bank
         }
     }
 }
