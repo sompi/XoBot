@@ -37,8 +37,8 @@ public final class nonBoltTips extends ActiveScript implements PaintListener, Me
 
     @Override
     public void MessageRecieved(MessageEvent messageEvent) {
-        if (messageEvent.getType() == 0 && messageEvent.getMessage().contains(Data.MSG_BOLT)){
-            Data.BOLTTIPS_MADE += 1;
+        if (messageEvent.getMessage().contains(Data.MSG_BOLT)){
+            Data.BOLTTIPS_MADE += 12;
         }
     }
 	
