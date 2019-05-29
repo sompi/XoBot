@@ -18,7 +18,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../xobot.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../../xobot-2.97.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -27,7 +27,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../317.jar!/" />
+          <root url="jar://$USER_HOME$/Documents/XoBot/APIs/SoulPlay.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
