@@ -27,10 +27,22 @@ public class Clean {
 //			Time.sleep(5);
 //		}
 
-		for (Item toClean : Inventory.getAll(Data.TO_CLEAN)){
-			System.out.println("Item found at " + toClean.getSlot() + " " + toClean.getDefinition().getName());
-			Packets.sendAction(74, Data.TO_CLEAN,toClean.getSlot(), 3214);
-			Time.sleep(5);
+		if (Data.AUTO_MODE == true){
+			System.out.println("Auto mode is on, cleaning all the herbs.");
+			for (int i = 0; i < Data.allHerbs.length; i++){
+				for (Item toCleanAuto : Inventory.getAll(Data.allHerbs)){
+					System.out.println("Item found at " + toCleanAuto.getSlot() + " " + toCleanAuto.getDefinition().getName());
+					Packets.sendAction(74, Data.TO_CLEAN,toCleanAuto.getSlot(), 3214);
+					Time.sleep(10);
+				}
+			}
+		} else {
+
+			for (Item toClean : Inventory.getAll(Data.TO_CLEAN)) {
+				System.out.println("Item found at " + toClean.getSlot() + " " + toClean.getDefinition().getName());
+				Packets.sendAction(74, Data.TO_CLEAN, toClean.getSlot(), 3214);
+				Time.sleep(10);
+			}
 		}
 	}
 }

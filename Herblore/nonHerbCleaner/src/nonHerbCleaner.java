@@ -52,7 +52,11 @@ public final class nonHerbCleaner extends ActiveScript implements PaintListener,
         x.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         x.setTitle("nonHerbCleaner");
 
-        combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Snapdragon", "Ranarr", "Irit", "Harralander", "Dwarf weed" }));
+        combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
+                "Guam", "Marrentill", "Tarromin", "Harralander", "Ranarr",
+                "Irit", "Avantoe", "Kwuarm", "Cadantine", "Dwarf weed",
+                "Torstol", "Lantadyme", "Toadflax", "Snapdragon",
+                "Spirit weed"}));
 
         start.setText("Start");
 
@@ -85,19 +89,51 @@ public final class nonHerbCleaner extends ActiveScript implements PaintListener,
             public void actionPerformed(ActionEvent arg0) {
                 herb = (String)combo.getSelectedItem();
                 switch (herb){
+                    case "Guam":
+                        Data.TO_CLEAN = Data.GUAM;
+                        break;
+                    case "Marrentill":
+                        Data.TO_CLEAN = Data.MARRENTILL;
+                        break;
+                    case "Tarromin":
+                        Data.TO_CLEAN = Data.TARROMIN;
+                        break;
+                    case "Harralander":
+                        Data.TO_CLEAN = Data.HARRALANDER;
+                        break;
                     case "Ranarr":
                         Data.TO_CLEAN = Data.RANARR;
                         break;
                     case "Irit":
                         Data.TO_CLEAN = Data.IRIT;
                         break;
-                    case "Harralander":
-                        Data.TO_CLEAN = Data.HARRALANDER;
-                    case "Snapdragon":
-                        Data.TO_CLEAN = Data.SNAPDRAGON;
+                    case "Avantoe":
+                        Data.TO_CLEAN = Data.AVANTOE;
+                        break;
+                    case "Kwuarm":
+                        Data.TO_CLEAN = Data.KWUARM;
+                        break;
+                    case "Cadantine":
+                        Data.TO_CLEAN = Data.CADANTINE;
+                        break;
                     case "Dwarf weed":
                         Data.TO_CLEAN = Data.DWARF_WEED;
-
+                        break;
+                    case "Torstol":
+                        Data.TO_CLEAN = Data.TORSTOL;
+                        break;
+                    case "Lantadyme":
+                        Data.TO_CLEAN = Data.LANTADYME;
+                        break;
+                    case "Toadflax":
+                        Data.TO_CLEAN = Data.TOADFLAX;
+                        break;
+                    case "Snapdragon":
+                        Data.TO_CLEAN = Data.SNAPDRAGON;
+                        break;
+                    case "Spirit weed":
+                        Data.TO_CLEAN = Data.SPIRIT_WEED;
+                        break;
                 }
                 x.dispose();
             }
