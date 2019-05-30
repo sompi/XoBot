@@ -1,7 +1,5 @@
 package nonGemCutter.Data;
 
-import xobot.script.wrappers.Area;
-
 public class Data {
 
 
