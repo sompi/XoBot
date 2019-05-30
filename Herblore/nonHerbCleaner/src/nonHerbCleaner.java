@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.swing.JDialog;
 
+import com.sun.glass.ui.Screen;
 import nonHerbCleaner.Data.Data;
 import nonHerbCleaner.Methodes.Banking;
 import nonHerbCleaner.Methodes.Clean;
@@ -51,6 +52,7 @@ public final class nonHerbCleaner extends ActiveScript implements PaintListener,
 
         x.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         x.setTitle("nonHerbCleaner");
+        x.setLocation(613, 308);
 
         combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {
                 "Guam", "Marrentill", "Tarromin", "Harralander", "Ranarr",
@@ -82,7 +84,6 @@ public final class nonHerbCleaner extends ActiveScript implements PaintListener,
                                                 .addGap(18, 18, 18)
                                                 .addComponent(start, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
                                 )));
-
         start.addActionListener(new ActionListener() {
 
             @Override
